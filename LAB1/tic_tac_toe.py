@@ -11,6 +11,8 @@
 # switching player
 # 3x3 board
 # generating a board
+import random
+import sys
 global count
 
 global active_player
@@ -29,6 +31,8 @@ def new_board():
 
         else:
             print(i, end=" | ")
+
+    print(20 * "-")
 
 
 def new_game():
@@ -51,19 +55,19 @@ def new_game():
             print(active_player)
 
             board.clear()
-            ans = input("Do you want to play again:y/n?")
-            if ans == 'y' or 'Y':
+
+            if input("Do you want to play again:y/n?").lower() == 'y':
                 new_game()
             else:
-                quit()
+                sys.exit()
         elif outcome == "Draw":
             print("Draw")
             board.clear()
-            ans = input("Do you want to play again:y/n?")
-            if ans == 'y' or 'Y':
+
+            if input("Do you want to play again:y/n?").lower() == 'y':
                 new_game()
             else:
-                quit()
+                sys.exit()
 
         else:
             c += 1
@@ -81,6 +85,12 @@ def switch_player(current):
 # checking if cell is occupied
 
 
+def comp_move():  # assuming computer always plays X
+    available_list = [index for index, i in enumerate(board) if i == '-']
+    comp_choice = random.choice(available_list)
+    return comp_choice + 1
+
+
 def check_if_occupied(userchoice):
     for index, i in enumerate(board):
         if (userchoice - 1 == index):
@@ -94,12 +104,13 @@ def check_if_occupied(userchoice):
 def player_move(current):
     global user_choice
     global valid_move
-
-    user_choice = int(input("Player {} please enter a free position between 1 to 9:".format(
-        current))) if current == "X" else int(input("Player {} please enter a free position between 1 to 9:".format(current)))
+# int(input("Player {} please enter a free position between 1 to 9:".format(
+#         current)))
+    user_choice = comp_move() if current == "X" else int(
+        input("Player {} please enter a free position between 1 to 9:".format(current)))
 
     if user_choice not in [(i + 1) for i in range(9)]:
-
+        print(user_choice)
         print("Enter a VALID Position:")
         player_move(current)
     else:
@@ -114,6 +125,7 @@ def player_move(current):
             board[user_choice - 1] = "O"
             new_board()
     else:
+        print(valid_move)
         print("Not a valid move. Its already occupied. Try again")
         player_move(current)
 
