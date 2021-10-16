@@ -104,7 +104,7 @@ def player_move(current):
         player_move(current)
     else:
         valid_move = check_if_occupied(user_choice)
-        
+
     # print(valid_move)
     if not valid_move:
         if current == "X":
