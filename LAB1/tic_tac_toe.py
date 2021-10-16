@@ -34,6 +34,8 @@ def new_board():
 
     print(20 * "-")
 
+# starting fresh game
+
 
 def new_game():
     global board
