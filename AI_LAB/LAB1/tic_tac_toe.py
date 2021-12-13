@@ -33,13 +33,60 @@ def playMove(board):
     return
 
 
+def selectRandom(optimum):
+    ln = len(optimum)
+    r = random.randrange(0, ln)  # generating a random index
+    return optimum[r]
+
+
 def compMove(board):
-    move = random.randint(1, 9)  # inclusive of limit 1 and 9
-    if not isOccupied(board, move - 1):
-        board[move - 1] = 'O'
-    else:
-        compMove(board)
-    return
+    # move = random.randint(1, 9)  # inclusive of limit 1 and 9
+    # if not isOccupied(board, move - 1):
+    #     board[move - 1] = 'O'
+    # else:
+    #     compMove(board)
+    # return
+    # checking all possible moves
+    possibleMoves = [index for index,
+                     trial in enumerate(board) if trial == ' ']
+    move = 0
+    # checking for chance of winning in current move
+    for alpha in ['O', 'X']:  # cuz if x is able to win in next that should be our next movc
+        for i in possibleMoves:
+            # creating a copy of the board
+            board_copy = board[:]
+            board_copy[i] = alpha
+            if checkForWinner(board_copy, alpha):
+                move = i
+                return move
+
+    # checking for chance of winning in next moves
+    # check corners first
+    cornersOpen = []
+    for i in possibleMoves:
+        if i in [0, 2, 6, 8]:
+            cornersOpen.append(i)
+    if len(cornersOpen) > 0:
+        move = selectRandom(cornersOpen)
+        return move
+    # next centre
+    for i in possibleMoves:
+        if i == 5:
+            move = i
+
+            return move
+
+      # else edges
+    edgesOpen = []
+    for i in possibleMoves:
+        if i in [1, 3, 5, 7]:
+            edgesOpen.append(i)
+    if len(edgesOpen) > 0:
+        move = selectRandom(edgesOpen)
+
+        return move
+
+    return move
 
 
 def checkForWinner(board, alpha):
@@ -82,14 +129,18 @@ def main():
         genBoard()
         if not checkForWinner(board, 'O'):
             playMove(board)
-            if(isFull(board)):
-                break
+
             genBoard()
         else:
             print("Player O won!")
             quit()
         if not checkForWinner(board, 'X'):
-            compMove(board)
+
+            move = compMove(board)
+            if move == None:
+                break
+            else:
+                board[move] = 'O'
             if(isFull(board)):
                 break
             genBoard()
